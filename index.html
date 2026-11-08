@@ -136,7 +136,7 @@ td a:hover{text-decoration:underline}
       <p id="fuentes">Idoneo, Renting Finders, Coches.com y Ayvens. Las webs oficiales de las marcas no publican cuotas cerradas para particulares (remiten a concesionario o configurador), por eso se recogen de los comparadores y operadores de renting.</p>
       <p>Marcas sin oferta nueva de renting para particulares en la última revisión:</p>
       <div class="miss" id="miss"></div>
-      <p>Fotos: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, con licencia libre. Pasa el ratón por una foto para ver autor y licencia; al pulsarla se abre su ficha. Son orientativas del modelo y pueden no coincidir con la versión o el año ofertados.</p>
+      <p>Fotos: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, con licencia libre. Pasa el ratón por una foto para ver autor y licencia; al pulsarla se abre la oferta. Ficha completa de cada foto en <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Commons</a>. Son orientativas del modelo y pueden no coincidir con la versión o el año ofertados.</p>
     </div>
   </section>
 </div>
@@ -151,7 +151,7 @@ td a:hover{text-decoration:underline}
     if(!i||typeof i.src!=="string"||!/^data:image\/(webp|jpeg|png);base64,/.test(i.src)) return `<span class="thumb ph" title="Sin foto">${CAR}</span>`;
     const cred=esc(`${i.titulo||""} · Foto: ${i.autor||"autor desconocido"} · ${i.licencia||""} · Wikimedia Commons`);
     const img=`<img class="thumb" src="${i.src}" alt="${alt}" title="${cred}" loading="lazy" width="96" height="60">`;
-    return /^https:\/\/commons\.wikimedia\.org\//.test(i.fuente||"")?`<a class="thumb-link" href="${esc(i.fuente)}" target="_blank" rel="noopener">${img}</a>`:img;}
+    return /^https:\/\//.test(r.url||"")?`<a class="thumb-link" href="${esc(r.url)}" target="_blank" rel="noopener" aria-label="Ver oferta de ${alt} en ${esc(r.fuente)}">${img}</a>`:img;}
   const eur=n=>n.toLocaleString("es-ES");
   function dgt(c){c=(c||"").toLowerCase(); if(/eléctrico|enchufable/.test(c))return["cero","0"]; if(/híbrido|mhev|glp/.test(c))return["eco","ECO"]; return["c","C"];}
   function fuelGroup(c){c=(c||"").toLowerCase(); if(/enchufable/.test(c))return"Híbrido enchufable"; if(/eléctrico/.test(c))return"Eléctrico"; if(/híbrido/.test(c))return"Híbrido"; if(/mhev/.test(c))return"Microhíbrido"; if(/glp/.test(c))return"GLP"; if(/diésel/.test(c))return"Diésel"; return"Gasolina";}
