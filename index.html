@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Cuotas de renting para particulares en España por marca y modelo, con IVA incluido, duración del contrato y km/año.">
+<title>Renting Particulares España</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<style>
+/* Layout: tarifa de concesionario — cabecera tipo matrícula, barra de filtros fija, tabla densa ordenable */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#151a23; --muted:#5b6474; --line:#d9dee7;
+  --plate:#1d3d9a; --plate-ink:#ffffff; --accent:#1d3d9a; --hi:#f2c230; --hi-ink:#2a2200;
+  --cero:#1f6fd1; --eco:#1a8f5a; --c:#c9a400; --row:#f8f9fb;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f131a; --surface:#161b24; --ink:#e6e9ef; --muted:#9aa3b2; --line:#2a313d;
+  --plate:#2a4fb8; --plate-ink:#ffffff; --accent:#8fb0ff; --hi:#f2c230; --hi-ink:#2a2200;
+  --cero:#6aa8ff; --eco:#4cc68c; --c:#e2c23a; --row:#1a2029; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f131a; --surface:#161b24; --ink:#e6e9ef; --muted:#9aa3b2; --line:#2a313d;
+  --plate:#2a4fb8; --plate-ink:#ffffff; --accent:#8fb0ff; --hi:#f2c230; --hi-ink:#2a2200;
+  --cero:#6aa8ff; --eco:#4cc68c; --c:#e2c23a; --row:#1a2029; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+header{display:grid;gap:12px}
+.plate{display:inline-flex;align-items:stretch;border:2px solid var(--ink);border-radius:6px;overflow:hidden;width:max-content;max-width:100%;background:var(--surface)}
+.plate .eu{background:var(--plate);color:var(--plate-ink);font:600 12px/1 var(--f-display);letter-spacing:.06em;padding:6px 7px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.plate .eu i{display:block;width:14px;height:14px;border-radius:50%;border:2px dotted var(--hi)}
+.plate h1{margin:0;font:700 clamp(28px,5.4vw,46px)/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;padding:8px 14px 6px;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:68ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:13px;color:var(--muted)}
+.stats b{font-family:var(--f-num);color:var(--ink);font-weight:500}
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.f{display:grid;gap:4px;min-width:0}
+.f label,.lbl{font:600 11px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input[type=search],select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+#q{width:220px;max-width:100%}
+input[type=range]{accent-color:var(--accent);width:170px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 13px/1 var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;cursor:pointer;padding-bottom:8px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:960px;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+thead th{font:600 12px/1.2 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);white-space:nowrap}
+thead th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+thead th button:focus-visible{outline:2px solid var(--accent)}
+thead th .arr{opacity:.35;font-size:10px}
+thead th[aria-sort] .arr{opacity:1;color:var(--accent)}
+tbody tr:nth-child(even){background:var(--row)}
+tbody tr.best td.price span{background:var(--hi);color:var(--hi-ink)}
+td.foto{padding:6px 8px 6px 12px;width:104px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.thumb{display:block;width:96px;height:60px;border-radius:5px;object-fit:cover;background:var(--row);border:1px solid var(--line)}
+a.thumb-link{display:block;border-radius:5px}
+.thumb.ph{display:grid;place-items:center;color:var(--muted)}
+.thumb.ph svg{width:46px;height:auto;opacity:.55}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+td.marca{font:600 16px/1.1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+td.modelo{font-weight:600;white-space:nowrap}
+td.version{color:var(--muted);max-width:280px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.price span{display:inline-block;font:500 16px/1 var(--f-num);padding:4px 6px;border-radius:4px}
+td.price small{display:block;font:400 11px/1.2 var(--f-body);color:var(--muted);margin-top:2px}
+.tag{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.dgt{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font:700 9px/1 var(--f-body);color:#fff;flex:none}
+.dgt.cero{background:var(--cero)} .dgt.eco{background:linear-gradient(90deg,var(--cero) 50%,var(--eco) 50%)} .dgt.c{background:var(--c);color:#2a2200}
+td a{color:var(--accent);text-decoration:none;font-weight:500;white-space:nowrap}
+td a:hover{text-decoration:underline}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px;font-size:14px;color:var(--muted)}
+.notes h2{font:700 20px/1.1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);margin:0 0 6px}
+.notes p,.notes ul{margin:0 0 8px}
+.notes ul{padding-left:18px}
+.miss{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.miss span{border:1px dashed var(--line);border-radius:4px;padding:3px 8px;font-size:13px;color:var(--ink)}
+@media (max-width:520px){#q,input[type=range]{width:100%}.f{flex:1 1 140px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="plate"><div class="eu"><i></i>E</div><h1>Renting particulares</h1></div>
+    <p class="lede">Cuotas mensuales de renting para particulares que publican las webs de renting multimarca en España. Precio "desde", IVA incluido, sin entrada, con seguro y mantenimiento incluidos según cada proveedor.</p>
+    <div class="stats" id="stats"><span>Cargando ofertas…</span></div>
+  </header>
+
+  <div class="filters" role="search">
+    <div class="f"><label for="q">Buscar</label><input id="q" type="search" placeholder="Modelo o versión"></div>
+    <div class="f"><label for="marca">Marca</label><select id="marca"><option value="">Todas</option></select></div>
+    <div class="f"><span class="lbl">Combustible</span><div class="chips" id="fuel"></div></div>
+    <div class="f"><label for="meses">Duración</label><select id="meses"><option value="">Cualquiera</option></select></div>
+    <div class="f"><label for="max">Cuota máx. <b id="maxv" class="num"></b></label><input id="max" type="range" min="250" max="1600" step="10" value="1600"></div>
+    <label class="chk" for="best"><input id="best" type="checkbox"> Solo la más barata por modelo</label>
+  </div>
+
+  <div class="tablebox">
+    <table>
+      <thead><tr>
+        <th><span class="sr">Foto</span></th>
+        <th data-k="marca"><button type="button">Marca <span class="arr">▲▼</span></button></th>
+        <th data-k="modelo"><button type="button">Modelo <span class="arr">▲▼</span></button></th>
+        <th>Versión</th>
+        <th data-k="combustible"><button type="button">Combustible <span class="arr">▲▼</span></button></th>
+        <th data-k="cuota" class="num"><button type="button">€/mes IVA incl. <span class="arr">▲▼</span></button></th>
+        <th data-k="meses" class="num"><button type="button">Contrato <span class="arr">▲▼</span></button></th>
+        <th data-k="km" class="num"><button type="button">Km/año <span class="arr">▲▼</span></button></th>
+        <th data-k="fuente"><button type="button">Fuente <span class="arr">▲▼</span></button></th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="9" class="empty">Cargando ofertas…</td></tr></tbody>
+    </table>
+  </div>
+
+  <section class="notes">
+    <div>
+      <h2>Cómo leer la tabla</h2>
+      <ul>
+        <li>La cuota es el precio de partida que anuncia cada web para esa versión, con IVA y sin entrada. La resaltada en amarillo es la más barata de cada modelo.</li>
+        <li>Contrato y km/año son las condiciones de esa cuota. Con más kilómetros o menos meses la cuota sube.</li>
+        <li>El distintivo junto al combustible es la etiqueta DGT orientativa (CERO, ECO o C).</li>
+        <li>Las ofertas dependen de stock y del estudio de solvencia. Confírmalas siempre en la web de origen.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Fuentes y cobertura</h2>
+      <p id="fuentes">Idoneo, Renting Finders, Coches.com y Ayvens. Las webs oficiales de las marcas no publican cuotas cerradas para particulares (remiten a concesionario o configurador), por eso se recogen de los comparadores y operadores de renting.</p>
+      <p>Marcas sin oferta nueva de renting para particulares en la última revisión:</p>
+      <div class="miss" id="miss"></div>
+      <p>Fotos: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, con licencia libre. Pasa el ratón por una foto para ver autor y licencia; al pulsarla se abre su ficha. Son orientativas del modelo y pueden no coincidir con la versión o el año ofertados.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s);
+  const state={rows:[],sort:{k:"cuota",dir:1},fuel:new Set(),meta:null,img:{}};
+  const slug=s=>String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  const CAR='<svg viewBox="0 0 64 28" aria-hidden="true"><path fill="currentColor" d="M6 20c-2 0-4-1-4-3v-3c0-2 1-3 3-3l9-1 8-6c2-1 4-2 7-2h10c3 0 5 1 7 3l6 5 7 1c2 0 3 2 3 3v3c0 2-2 3-4 3h-3a6 6 0 0 0-12 0H21a6 6 0 0 0-12 0zm10-10h13V5h-4c-2 0-3 0-5 1zm16 0h15l-4-4c-1-1-2-1-4-1h-7zM15 27a4 4 0 1 1 0-8 4 4 0 0 1 0 8m33 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8"/></svg>';
+  function foto(r){const i=state.img[slug(r.marca+" "+r.modelo)]; const alt=esc(r.marca+" "+r.modelo);
+    if(!i||typeof i.src!=="string"||!/^data:image\/(webp|jpeg|png);base64,/.test(i.src)) return `<span class="thumb ph" title="Sin foto">${CAR}</span>`;
+    const cred=esc(`${i.titulo||""} · Foto: ${i.autor||"autor desconocido"} · ${i.licencia||""} · Wikimedia Commons`);
+    const img=`<img class="thumb" src="${i.src}" alt="${alt}" title="${cred}" loading="lazy" width="96" height="60">`;
+    return /^https:\/\/commons\.wikimedia\.org\//.test(i.fuente||"")?`<a class="thumb-link" href="${esc(i.fuente)}" target="_blank" rel="noopener">${img}</a>`:img;}
+  const eur=n=>n.toLocaleString("es-ES");
+  function dgt(c){c=(c||"").toLowerCase(); if(/eléctrico|enchufable/.test(c))return["cero","0"]; if(/híbrido|mhev|glp/.test(c))return["eco","ECO"]; return["c","C"];}
+  function fuelGroup(c){c=(c||"").toLowerCase(); if(/enchufable/.test(c))return"Híbrido enchufable"; if(/eléctrico/.test(c))return"Eléctrico"; if(/híbrido/.test(c))return"Híbrido"; if(/mhev/.test(c))return"Microhíbrido"; if(/glp/.test(c))return"GLP"; if(/diésel/.test(c))return"Diésel"; return"Gasolina";}
+  const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+  function buildFilters(){
+    const marcas=[...new Set(state.rows.map(r=>r.marca))].sort((a,b)=>a.localeCompare(b,"es"));
+    const sel=$("#marca"), cur=sel.value; sel.innerHTML='<option value="">Todas ('+marcas.length+')</option>'+marcas.map(m=>`<option${m===cur?" selected":""}>${esc(m)}</option>`).join("");
+    const meses=[...new Set(state.rows.map(r=>r.meses))].sort((a,b)=>a-b);
+    const ms=$("#meses"), mc=ms.value; ms.innerHTML='<option value="">Cualquiera</option>'+meses.map(m=>`<option value="${m}"${String(m)===mc?" selected":""}>${m} meses</option>`).join("");
+    const fuels=["Gasolina","Diésel","Microhíbrido","Híbrido","Híbrido enchufable","Eléctrico","GLP"].filter(f=>state.rows.some(r=>fuelGroup(r.combustible)===f));
+    $("#fuel").innerHTML=fuels.map(f=>`<button type="button" class="chip" aria-pressed="${state.fuel.has(f)}" data-f="${f}">${f}</button>`).join("");
+    const mx=Math.max(...state.rows.map(r=>r.cuota)); const rg=$("#max"); rg.max=Math.ceil(mx/10)*10; if(+rg.value>+rg.max||!rg.dataset.touched) rg.value=rg.max; $("#maxv").textContent=eur(+rg.value)+" €";
+  }
+
+  function render(){
+    const q=$("#q").value.trim().toLowerCase(), marca=$("#marca").value, meses=$("#meses").value, max=+$("#max").value, best=$("#best").checked;
+    const minBy={}; state.rows.forEach(r=>{const k=r.marca+"|"+r.modelo; if(!(k in minBy)||r.cuota<minBy[k]) minBy[k]=r.cuota;});
+    let rs=state.rows.filter(r=>(!marca||r.marca===marca)&&(!meses||String(r.meses)===meses)&&r.cuota<=max&&(!state.fuel.size||state.fuel.has(fuelGroup(r.combustible)))&&(!q||(r.marca+" "+r.modelo+" "+r.version).toLowerCase().includes(q)));
+    if(best){const seen=new Set(); rs=rs.slice().sort((a,b)=>a.cuota-b.cuota).filter(r=>{const k=r.marca+"|"+r.modelo; if(seen.has(k))return false; seen.add(k); return true;});}
+    const {k,dir}=state.sort;
+    rs.sort((a,b)=>{const x=a[k],y=b[k]; if(x==null)return 1; if(y==null)return -1; return (typeof x==="number"?x-y:String(x).localeCompare(String(y),"es"))*dir || a.cuota-b.cuota;});
+    document.querySelectorAll("thead th[data-k]").forEach(th=>{ if(th.dataset.k===k){th.setAttribute("aria-sort",dir>0?"ascending":"descending"); th.querySelector(".arr").textContent=dir>0?"▲":"▼";} else {th.removeAttribute("aria-sort"); th.querySelector(".arr").textContent="▲▼";}});
+    $("#rows").innerHTML=rs.length?rs.map(r=>{const [c,t]=dgt(r.combustible); const isBest=minBy[r.marca+"|"+r.modelo]===r.cuota;
+      return `<tr class="${isBest?"best":""}"><td class="foto">${foto(r)}</td><td class="marca">${esc(r.marca)}</td><td class="modelo">${esc(r.modelo)}</td><td class="version">${esc(r.version==="—"?"":r.version)}</td>
+      <td><span class="tag"><span class="dgt ${c}" title="Etiqueta DGT ${t}">${t}</span>${esc(r.combustible)}</span></td>
+      <td class="num price"><span>${eur(r.cuota)} €</span><small>desde, sin entrada</small></td>
+      <td class="num">${r.meses} meses</td><td class="num">${r.km?eur(r.km):"—"}</td>
+      <td><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.fuente)} ↗</a></td></tr>`;}).join("")
+      :`<tr><td colspan="9" class="empty">Ninguna oferta cumple estos filtros. Prueba a subir la cuota máxima o quitar algún combustible.</td></tr>`;
+    const brands=new Set(rs.map(r=>r.marca)).size; const cheapest=rs.reduce((m,r)=>!m||r.cuota<m.cuota?r:m,null);
+    const upd=state.meta&&state.meta.actualizado?new Date(state.meta.actualizado+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"}):"—";
+    $("#stats").innerHTML=`<span><b>${rs.length}</b> de <b>${state.rows.length}</b> ofertas</span><span><b>${brands}</b> marcas</span>`+(cheapest?`<span>Más barata: <b>${esc(cheapest.marca)} ${esc(cheapest.modelo)} · ${eur(cheapest.cuota)} €/mes</b></span>`:"")+`<span>Actualizado: <b>${upd}</b></span>`;
+  }
+
+  document.addEventListener("input",e=>{ if(e.target.id==="max"){e.target.dataset.touched=1; $("#maxv").textContent=eur(+e.target.value)+" €";} if(["q","marca","meses","max","best"].includes(e.target.id)) render(); });
+  document.addEventListener("change",e=>{ if(["marca","meses","best"].includes(e.target.id)) render(); });
+  $("#fuel").addEventListener("click",e=>{const b=e.target.closest(".chip"); if(!b)return; const f=b.dataset.f; state.fuel.has(f)?state.fuel.delete(f):state.fuel.add(f); b.setAttribute("aria-pressed",state.fuel.has(f)); render();});
+  document.querySelectorAll("thead th[data-k] button").forEach(btn=>btn.addEventListener("click",()=>{const k=btn.parentElement.dataset.k; state.sort=state.sort.k===k?{k,dir:-state.sort.dir}:{k,dir:1}; render();}));
+
+  function showMeta(m){state.meta=m; const miss=(m&&m.sinOferta)||[]; $("#miss").innerHTML=miss.length?miss.map(x=>`<span>${esc(x)}</span>`).join(""):"<span>Ninguna</span>";}
+
+  (async()=>{
+    try{
+      const res=await fetch("data.json",{cache:"no-cache"}); if(!res.ok) throw new Error(res.status);
+      const d=await res.json();
+      state.img=d.imagenes||{}; showMeta(d.meta||null);
+      state.rows=(d.ofertas||[]).filter(r=>r&&typeof r.cuota==="number");
+      if(!state.rows.length){$("#rows").innerHTML='<tr><td colspan="9" class="empty">Todavía no hay ofertas publicadas.</td></tr>'; return;}
+      buildFilters(); render();
+    }catch(e){ $("#rows").innerHTML='<tr><td colspan="9" class="empty">No se han podido cargar las ofertas. Recarga la página.</td></tr>'; $("#stats").innerHTML="<span>Sin datos</span>"; }
+  })();
+})();
+</script>
+</body>
+</html>
