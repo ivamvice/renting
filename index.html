@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Cuotas de renting para particulares en España por marca y modelo, con IVA incluido, duración del contrato y km/año.">
+<meta name="description" content="Cuotas de renting para particulares en España por marca y modelo, con o sin entrada, IVA incluido, duración del contrato y km/año.">
 <title>Renting Particulares España</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -49,7 +49,7 @@ input[type=range]{accent-color:var(--accent);width:170px}
 .chk{display:flex;gap:6px;align-items:center;font-size:14px;cursor:pointer;padding-bottom:8px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
-table{border-collapse:collapse;width:100%;min-width:960px;font-size:14px}
+table{border-collapse:collapse;width:100%;min-width:1040px;font-size:14px}
 th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
 thead th{font:600 12px/1.2 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);white-space:nowrap}
 thead th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
@@ -58,9 +58,9 @@ thead th .arr{opacity:.35;font-size:10px}
 thead th[aria-sort] .arr{opacity:1;color:var(--accent)}
 tbody tr:nth-child(even){background:var(--row)}
 tbody tr.best td.price span{background:var(--hi);color:var(--hi-ink)}
-td.foto{padding:6px 8px 6px 12px;width:104px}
+td.foto{padding:6px 8px 6px 12px;width:104px;min-width:104px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.thumb{display:block;width:96px;height:60px;border-radius:5px;object-fit:cover;background:var(--row);border:1px solid var(--line)}
+.thumb{display:block;width:96px;min-width:96px;max-width:none;height:60px;border-radius:5px;object-fit:cover;background:var(--row);border:1px solid var(--line)}
 a.thumb-link{display:block;border-radius:5px}
 .thumb.ph{display:grid;place-items:center;color:var(--muted)}
 .thumb.ph svg{width:46px;height:auto;opacity:.55}
@@ -68,6 +68,8 @@ a.thumb-link{display:block;border-radius:5px}
 td.marca{font:600 16px/1.1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
 td.modelo{font-weight:600;white-space:nowrap}
 td.version{color:var(--muted);max-width:280px}
+td.ent b{font-family:var(--f-num);font-weight:500}
+td.ent .cero{color:var(--muted);font-size:13px}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 td.price span{display:inline-block;font:500 16px/1 var(--f-num);padding:4px 6px;border-radius:4px}
 td.price small{display:block;font:400 11px/1.2 var(--f-body);color:var(--muted);margin-top:2px}
@@ -91,7 +93,7 @@ td a:hover{text-decoration:underline}
 <div class="wrap">
   <header>
     <div class="plate"><div class="eu"><i></i>E</div><h1>Renting particulares</h1></div>
-    <p class="lede">Cuotas mensuales de renting para particulares que publican las webs de renting multimarca en España. Precio "desde", IVA incluido, sin entrada, con seguro y mantenimiento incluidos según cada proveedor.</p>
+    <p class="lede">Cuotas mensuales de renting para particulares que publican las webs de renting multimarca en España. Precio "desde", IVA incluido, con o sin entrada, con seguro y mantenimiento incluidos según cada proveedor.</p>
     <div class="stats" id="stats"><span>Cargando ofertas…</span></div>
   </header>
 
@@ -100,6 +102,7 @@ td a:hover{text-decoration:underline}
     <div class="f"><label for="marca">Marca</label><select id="marca"><option value="">Todas</option></select></div>
     <div class="f"><span class="lbl">Combustible</span><div class="chips" id="fuel"></div></div>
     <div class="f"><label for="meses">Duración</label><select id="meses"><option value="">Cualquiera</option></select></div>
+    <div class="f"><label for="entrada">Entrada</label><select id="entrada"><option value="">Con y sin entrada</option><option value="sin">Sin entrada</option><option value="con">Con entrada</option></select></div>
     <div class="f"><label for="max">Cuota máx. <b id="maxv" class="num"></b></label><input id="max" type="range" min="250" max="1600" step="10" value="1600"></div>
     <label class="chk" for="best"><input id="best" type="checkbox"> Solo la más barata por modelo</label>
   </div>
@@ -113,11 +116,12 @@ td a:hover{text-decoration:underline}
         <th>Versión</th>
         <th data-k="combustible"><button type="button">Combustible <span class="arr">▲▼</span></button></th>
         <th data-k="cuota" class="num"><button type="button">€/mes IVA incl. <span class="arr">▲▼</span></button></th>
+        <th data-k="entrada" class="num"><button type="button">Entrada <span class="arr">▲▼</span></button></th>
         <th data-k="meses" class="num"><button type="button">Contrato <span class="arr">▲▼</span></button></th>
         <th data-k="km" class="num"><button type="button">Km/año <span class="arr">▲▼</span></button></th>
         <th data-k="fuente"><button type="button">Fuente <span class="arr">▲▼</span></button></th>
       </tr></thead>
-      <tbody id="rows"><tr><td colspan="9" class="empty">Cargando ofertas…</td></tr></tbody>
+      <tbody id="rows"><tr><td colspan="10" class="empty">Cargando ofertas…</td></tr></tbody>
     </table>
   </div>
 
@@ -127,13 +131,14 @@ td a:hover{text-decoration:underline}
       <ul>
         <li>La cuota es el precio de partida que anuncia cada web para esa versión, con IVA y sin entrada. La resaltada en amarillo es la más barata de cada modelo.</li>
         <li>Contrato y km/año son las condiciones de esa cuota. Con más kilómetros o menos meses la cuota sube.</li>
+        <li>Entrada es el pago inicial que exige la oferta, IVA incluido. En las ofertas con entrada, la cuota es más baja porque parte del coste se paga al principio; para compararlas con una sin entrada, reparte la entrada entre los meses del contrato. La entrada no se devuelve al terminar.</li>
         <li>El distintivo junto al combustible es la etiqueta DGT orientativa (CERO, ECO o C).</li>
         <li>Las ofertas dependen de stock y del estudio de solvencia. Confírmalas siempre en la web de origen.</li>
       </ul>
     </div>
     <div>
       <h2>Fuentes y cobertura</h2>
-      <p id="fuentes">Idoneo, Renting Finders, Coches.com y Ayvens. Las webs oficiales de las marcas no publican cuotas cerradas para particulares (remiten a concesionario o configurador), por eso se recogen de los comparadores y operadores de renting.</p>
+      <p id="fuentes">Idoneo, Renting Finders, Coches.com, Ayvens, Carwow, Santander Renting y los programas oficiales de Toyota y Škoda. Las webs oficiales de las marcas no publican cuotas cerradas para particulares (remiten a concesionario o configurador), por eso se recogen de los comparadores y operadores de renting.</p>
       <p>Marcas sin oferta nueva de renting para particulares en la última revisión:</p>
       <div class="miss" id="miss"></div>
       <p>Fotos: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, con licencia libre. Pasa el ratón por una foto para ver autor y licencia; al pulsarla se abre la oferta. Ficha completa de cada foto en <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Commons</a>. Son orientativas del modelo y pueden no coincidir con la versión o el año ofertados.</p>
@@ -168,27 +173,29 @@ td a:hover{text-decoration:underline}
   }
 
   function render(){
-    const q=$("#q").value.trim().toLowerCase(), marca=$("#marca").value, meses=$("#meses").value, max=+$("#max").value, best=$("#best").checked;
-    const minBy={}; state.rows.forEach(r=>{const k=r.marca+"|"+r.modelo; if(!(k in minBy)||r.cuota<minBy[k]) minBy[k]=r.cuota;});
-    let rs=state.rows.filter(r=>(!marca||r.marca===marca)&&(!meses||String(r.meses)===meses)&&r.cuota<=max&&(!state.fuel.size||state.fuel.has(fuelGroup(r.combustible)))&&(!q||(r.marca+" "+r.modelo+" "+r.version).toLowerCase().includes(q)));
-    if(best){const seen=new Set(); rs=rs.slice().sort((a,b)=>a.cuota-b.cuota).filter(r=>{const k=r.marca+"|"+r.modelo; if(seen.has(k))return false; seen.add(k); return true;});}
+    const q=$("#q").value.trim().toLowerCase(), marca=$("#marca").value, meses=$("#meses").value, max=+$("#max").value, best=$("#best").checked, ent=$("#entrada").value;
+    const gk=r=>r.marca+"|"+r.modelo+"|"+(r.entrada>0?"c":"s");
+    const minBy={}; state.rows.forEach(r=>{const k=gk(r); if(!(k in minBy)||r.cuota<minBy[k]) minBy[k]=r.cuota;});
+    let rs=state.rows.filter(r=>(!marca||r.marca===marca)&&(!meses||String(r.meses)===meses)&&r.cuota<=max&&(!ent||(ent==="sin"?!(r.entrada>0):r.entrada>0))&&(!state.fuel.size||state.fuel.has(fuelGroup(r.combustible)))&&(!q||(r.marca+" "+r.modelo+" "+r.version).toLowerCase().includes(q)));
+    if(best){const seen=new Set(); rs=rs.slice().sort((a,b)=>a.cuota-b.cuota).filter(r=>{const k=gk(r); if(seen.has(k))return false; seen.add(k); return true;});}
     const {k,dir}=state.sort;
     rs.sort((a,b)=>{const x=a[k],y=b[k]; if(x==null)return 1; if(y==null)return -1; return (typeof x==="number"?x-y:String(x).localeCompare(String(y),"es"))*dir || a.cuota-b.cuota;});
     document.querySelectorAll("thead th[data-k]").forEach(th=>{ if(th.dataset.k===k){th.setAttribute("aria-sort",dir>0?"ascending":"descending"); th.querySelector(".arr").textContent=dir>0?"▲":"▼";} else {th.removeAttribute("aria-sort"); th.querySelector(".arr").textContent="▲▼";}});
-    $("#rows").innerHTML=rs.length?rs.map(r=>{const [c,t]=dgt(r.combustible); const isBest=minBy[r.marca+"|"+r.modelo]===r.cuota;
+    $("#rows").innerHTML=rs.length?rs.map(r=>{const [c,t]=dgt(r.combustible); const isBest=minBy[gk(r)]===r.cuota;
       return `<tr class="${isBest?"best":""}"><td class="foto">${foto(r)}</td><td class="marca">${esc(r.marca)}</td><td class="modelo">${esc(r.modelo)}</td><td class="version">${esc(r.version==="—"?"":r.version)}</td>
       <td><span class="tag"><span class="dgt ${c}" title="Etiqueta DGT ${t}">${t}</span>${esc(r.combustible)}</span></td>
-      <td class="num price"><span>${eur(r.cuota)} €</span><small>desde, sin entrada</small></td>
+      <td class="num price"><span>${eur(r.cuota)} €</span><small>${r.entrada>0?"desde, con entrada":"desde, sin entrada"}</small></td>
+      <td class="num ent">${r.entrada>0?`<b>${eur(r.entrada)} €</b>`:'<span class="cero">Sin entrada</span>'}</td>
       <td class="num">${r.meses} meses</td><td class="num">${r.km?eur(r.km):"—"}</td>
       <td><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.fuente)} ↗</a></td></tr>`;}).join("")
-      :`<tr><td colspan="9" class="empty">Ninguna oferta cumple estos filtros. Prueba a subir la cuota máxima o quitar algún combustible.</td></tr>`;
-    const brands=new Set(rs.map(r=>r.marca)).size; const cheapest=rs.reduce((m,r)=>!m||r.cuota<m.cuota?r:m,null);
+      :`<tr><td colspan="10" class="empty">Ninguna oferta cumple estos filtros. Prueba a subir la cuota máxima o quitar algún combustible.</td></tr>`;
+    const brands=new Set(rs.map(r=>r.marca)).size; const pool=rs.some(r=>!(r.entrada>0))?rs.filter(r=>!(r.entrada>0)):rs; const cheapest=pool.reduce((m,r)=>!m||r.cuota<m.cuota?r:m,null);
     const upd=state.meta&&state.meta.actualizado?new Date(state.meta.actualizado+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"}):"—";
-    $("#stats").innerHTML=`<span><b>${rs.length}</b> de <b>${state.rows.length}</b> ofertas</span><span><b>${brands}</b> marcas</span>`+(cheapest?`<span>Más barata: <b>${esc(cheapest.marca)} ${esc(cheapest.modelo)} · ${eur(cheapest.cuota)} €/mes</b></span>`:"")+`<span>Actualizado: <b>${upd}</b></span>`;
+    $("#stats").innerHTML=`<span><b>${rs.length}</b> de <b>${state.rows.length}</b> ofertas</span><span><b>${brands}</b> marcas</span>`+(cheapest?`<span>Más barata${cheapest.entrada>0?" (con entrada)":" sin entrada"}: <b>${esc(cheapest.marca)} ${esc(cheapest.modelo)} · ${eur(cheapest.cuota)} €/mes</b></span>`:"")+`<span>Actualizado: <b>${upd}</b></span>`;
   }
 
-  document.addEventListener("input",e=>{ if(e.target.id==="max"){e.target.dataset.touched=1; $("#maxv").textContent=eur(+e.target.value)+" €";} if(["q","marca","meses","max","best"].includes(e.target.id)) render(); });
-  document.addEventListener("change",e=>{ if(["marca","meses","best"].includes(e.target.id)) render(); });
+  document.addEventListener("input",e=>{ if(e.target.id==="max"){e.target.dataset.touched=1; $("#maxv").textContent=eur(+e.target.value)+" €";} if(["q","marca","meses","max","best","entrada"].includes(e.target.id)) render(); });
+  document.addEventListener("change",e=>{ if(["marca","meses","best","entrada"].includes(e.target.id)) render(); });
   $("#fuel").addEventListener("click",e=>{const b=e.target.closest(".chip"); if(!b)return; const f=b.dataset.f; state.fuel.has(f)?state.fuel.delete(f):state.fuel.add(f); b.setAttribute("aria-pressed",state.fuel.has(f)); render();});
   document.querySelectorAll("thead th[data-k] button").forEach(btn=>btn.addEventListener("click",()=>{const k=btn.parentElement.dataset.k; state.sort=state.sort.k===k?{k,dir:-state.sort.dir}:{k,dir:1}; render();}));
 
@@ -199,10 +206,10 @@ td a:hover{text-decoration:underline}
       const res=await fetch("data.json",{cache:"no-cache"}); if(!res.ok) throw new Error(res.status);
       const d=await res.json();
       state.img=d.imagenes||{}; showMeta(d.meta||null);
-      state.rows=(d.ofertas||[]).filter(r=>r&&typeof r.cuota==="number");
-      if(!state.rows.length){$("#rows").innerHTML='<tr><td colspan="9" class="empty">Todavía no hay ofertas publicadas.</td></tr>'; return;}
+      state.rows=(d.ofertas||[]).filter(r=>r&&typeof r.cuota==="number").map(r=>(r.entrada=+r.entrada||0,r));
+      if(!state.rows.length){$("#rows").innerHTML='<tr><td colspan="10" class="empty">Todavía no hay ofertas publicadas.</td></tr>'; return;}
       buildFilters(); render();
-    }catch(e){ $("#rows").innerHTML='<tr><td colspan="9" class="empty">No se han podido cargar las ofertas. Recarga la página.</td></tr>'; $("#stats").innerHTML="<span>Sin datos</span>"; }
+    }catch(e){ $("#rows").innerHTML='<tr><td colspan="10" class="empty">No se han podido cargar las ofertas. Recarga la página.</td></tr>'; $("#stats").innerHTML="<span>Sin datos</span>"; }
   })();
 })();
 </script>
